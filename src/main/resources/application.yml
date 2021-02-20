@@ -1,0 +1,9 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://localhost
+      database: energize#localdb
+    continue-on-error: false
+  config:
+    activate:
+      on-profile: local
