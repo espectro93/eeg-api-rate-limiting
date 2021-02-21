@@ -5,9 +5,10 @@ import java.io.BufferedReader
 import java.io.FileReader
 import java.io.IOException
 import java.math.BigDecimal
+import java.time.Year
 import java.time.YearMonth
 
-object EegTsvConstants {
+object EegTsvConstantsTill2008 {
     const val YEAR_MONTH = 0
     const val BELOW_THIRTY_KWP = 1
     const val ABOVE_THIRTY_BELOW_HUNDRED_KWP = 2
@@ -18,14 +19,22 @@ object EegTsvConstants {
 }
 
 @Service
-class EegTsvReader() {
+class EegTsvTill2008Reader() {
 
-    fun readEeg() {
+    private val internalEegByYearList = mutableListOf<EegByYear>()
+    private val internalOpenSpaceSystemEegList = mutableListOf<OpenSpaceSystemEeg>()
+    private val internalFacadeEnclosureList = mutableListOf<EegFacadeEnclosure>()
+
+    val eegByYearList: List<EegByYear> = internalEegByYearList
+    val openSpaceSystemEegList: List<OpenSpaceSystemEeg> = internalOpenSpaceSystemEegList
+    val facadeEnclosureList: List<EegFacadeEnclosure> = internalFacadeEnclosureList
+
+    init {
+        readFromTsv()
+    }
+
+    private fun readFromTsv() {
         var fileReader: BufferedReader? = null
-
-        val eegList = ArrayList<Eeg>()
-        val openSpaceSystemEegList = ArrayList<OpenSpaceSystemEeg>()
-        val facadeEnclosureList = ArrayList<EegFacadeEnclosure>()
 
         try {
 
@@ -39,36 +48,36 @@ class EegTsvReader() {
 
             while (line != null) {
                 val tokens = line.split("\t");
-                val date = tokens[EegTsvConstants.YEAR_MONTH]
-                val belowThirtyKwp = tokens[EegTsvConstants.BELOW_THIRTY_KWP]
-                val aboveThirtyBelowHundred = tokens[EegTsvConstants.ABOVE_THIRTY_BELOW_HUNDRED_KWP]
-                val aboveHundredBelowThousand = tokens[EegTsvConstants.ABOVE_HUNDRED_BELOW_THOUSAND_KWP]
-                val aboveThousand = tokens[EegTsvConstants.ABOVE_THOUSAND_KWP]
-                val openSpaceSystem = tokens[EegTsvConstants.OPEN_SPACE_SYSTEM]
-                val facadeEnclosure = tokens[EegTsvConstants.FACADE_ENCLOSURE]
+                val date = tokens[EegTsvConstantsTill2008.YEAR_MONTH]
+                val belowThirtyKwp = tokens[EegTsvConstantsTill2008.BELOW_THIRTY_KWP]
+                val aboveThirtyBelowHundred = tokens[EegTsvConstantsTill2008.ABOVE_THIRTY_BELOW_HUNDRED_KWP]
+                val aboveHundredBelowThousand = tokens[EegTsvConstantsTill2008.ABOVE_HUNDRED_BELOW_THOUSAND_KWP]
+                val aboveThousand = tokens[EegTsvConstantsTill2008.ABOVE_THOUSAND_KWP]
+                val openSpaceSystem = tokens[EegTsvConstantsTill2008.OPEN_SPACE_SYSTEM]
+                val facadeEnclosure = tokens[EegTsvConstantsTill2008.FACADE_ENCLOSURE]
 
-                eegList.addAll(
+                internalEegByYearList.addAll(
                         listOf(
-                                Eeg(
-                                        YearMonth.of(Integer.parseInt(date), 1),
+                                EegByYear(
+                                        Year.of(Integer.parseInt(date)),
                                         BigDecimal(belowThirtyKwp),
                                         0,
                                         30
                                 ),
-                                Eeg(
-                                        YearMonth.of(Integer.parseInt(date), 1),
+                                EegByYear(
+                                        Year.of(Integer.parseInt(date)),
                                         BigDecimal(aboveThirtyBelowHundred),
                                         31,
                                         100
                                 ),
-                                Eeg(
-                                        YearMonth.of(Integer.parseInt(date), 1),
+                                EegByYear(
+                                        Year.of(Integer.parseInt(date)),
                                         BigDecimal(aboveHundredBelowThousand),
                                         101,
                                         1000
                                 ),
-                                Eeg(
-                                        YearMonth.of(Integer.parseInt(date), 1),
+                                EegByYear(
+                                        Year.of(Integer.parseInt(date)),
                                         BigDecimal(aboveThousand),
                                         1001,
                                         null
@@ -76,7 +85,7 @@ class EegTsvReader() {
                         )
                 )
 
-                facadeEnclosureList.add(
+                internalFacadeEnclosureList.add(
                         EegFacadeEnclosure(
                                 YearMonth.now(),
                                 BigDecimal(facadeEnclosure)
@@ -88,7 +97,7 @@ class EegTsvReader() {
                     upperBound = upperBound.replace("< ", "")
                     upperBound = upperBound.replace(" ", "")
 
-                    openSpaceSystemEegList.add(
+                    internalOpenSpaceSystemEegList.add(
                             OpenSpaceSystemEeg(
                                     YearMonth.now(),
                                     BigDecimal(openSpaceSystem.substringAfter("kW: ")),
@@ -99,7 +108,7 @@ class EegTsvReader() {
                     continue
                 }
 
-                openSpaceSystemEegList.add(
+                internalOpenSpaceSystemEegList.add(
                         OpenSpaceSystemEeg(
                                 YearMonth.now(),
                                 BigDecimal(openSpaceSystem),
@@ -120,4 +129,6 @@ class EegTsvReader() {
             }
         }
     }
+
+
 }
