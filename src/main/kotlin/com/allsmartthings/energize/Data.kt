@@ -6,13 +6,15 @@ import java.time.YearMonth
 
 data class EegByYear(
         val date: Year,
-        val value: BigDecimal,
-        val lowerKwpBound: Int,
-        val upperKwpBound: Int?
+        val rangeValues: List<EegForKwpRange>
 )
 
 data class EegByYearMonth(
         val date: YearMonth,
+        val rangeValues: List<EegForKwpRange>
+)
+
+data class EegForKwpRange(
         val value: BigDecimal,
         val lowerKwpBound: Int,
         val upperKwpBound: Int?
@@ -29,10 +31,14 @@ data class EegFacadeEnclosure(
         val value: BigDecimal
 )
 
-data class EegWithSelfConsumption(
+data class EegWithSelfConsumptionByYear(
+        val date: Year,
+        val rangeValues: List<EegForKwpRange>,
+        val aboveThreshold: Boolean
+)
+
+data class EegWithSelfConsumptionByYearMonth(
         val date: YearMonth,
-        val value: BigDecimal,
-        val lowerKwpBound: Int,
-        val upperKwpBound: Int,
+        val rangeValues: List<EegForKwpRange>,
         val aboveThreshold: Boolean
 )
