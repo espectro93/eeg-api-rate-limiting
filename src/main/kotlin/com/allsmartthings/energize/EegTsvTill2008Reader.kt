@@ -21,13 +21,13 @@ object EegTsvConstantsTill2008 {
 @Service
 class EegTsvTill2008Reader() {
 
-    private val internalEegByYearList = mutableListOf<EegByYear>()
-    private val internalOpenSpaceSystemEegList = mutableListOf<OpenSpaceSystemEeg>()
-    private val internalFacadeEnclosureList = mutableListOf<EegFacadeEnclosure>()
+    private val internalEegByYearList = mutableListOf<EegType.EegByYear>()
+    private val internalOpenSpaceSystemEegList = mutableListOf<EegType.OpenSpaceSystemEeg>()
+    private val internalFacadeEnclosureList = mutableListOf<EegType.EegFacadeEnclosure>()
 
-    val eegByYearList: List<EegByYear> = internalEegByYearList
-    val openSpaceSystemEegList: List<OpenSpaceSystemEeg> = internalOpenSpaceSystemEegList
-    val facadeEnclosureList: List<EegFacadeEnclosure> = internalFacadeEnclosureList
+    val eegByYearList: List<EegType.EegByYear> = internalEegByYearList
+    val openSpaceSystemEegList: List<EegType.OpenSpaceSystemEeg> = internalOpenSpaceSystemEegList
+    val facadeEnclosureList: List<EegType.EegFacadeEnclosure> = internalFacadeEnclosureList
 
     init {
         readFromTsv()
@@ -57,39 +57,55 @@ class EegTsvTill2008Reader() {
                 val facadeEnclosure = tokens[EegTsvConstantsTill2008.FACADE_ENCLOSURE]
 
                 internalEegByYearList.addAll(
-                        listOf(
-                                EegByYear(
-                                        Year.of(Integer.parseInt(date)),
-                                        BigDecimal(belowThirtyKwp),
-                                        0,
-                                        30
-                                ),
-                                EegByYear(
-                                        Year.of(Integer.parseInt(date)),
-                                        BigDecimal(aboveThirtyBelowHundred),
-                                        31,
-                                        100
-                                ),
-                                EegByYear(
-                                        Year.of(Integer.parseInt(date)),
-                                        BigDecimal(aboveHundredBelowThousand),
-                                        101,
-                                        1000
-                                ),
-                                EegByYear(
-                                        Year.of(Integer.parseInt(date)),
-                                        BigDecimal(aboveThousand),
-                                        1001,
-                                        null
-                                ),
-                        )
+                    listOf(
+                        EegType.EegByYear(
+                            Year.of(Integer.parseInt(date)),
+                            listOf(
+                                EegForKwpRange(
+                                    BigDecimal(belowThirtyKwp),
+                                    0,
+                                    30
+                                )
+                            )
+                        ),
+                        EegType.EegByYear(
+                            Year.of(Integer.parseInt(date)),
+                            listOf(
+                                EegForKwpRange(
+                                    BigDecimal(aboveThirtyBelowHundred),
+                                    31,
+                                    100
+                                )
+                            )
+                        ),
+                        EegType.EegByYear(
+                            Year.of(Integer.parseInt(date)),
+                            listOf(
+                                EegForKwpRange(
+                                    BigDecimal(aboveHundredBelowThousand),
+                                    101,
+                                    1000
+                                )
+                            )
+                        ),
+                        EegType.EegByYear(
+                            Year.of(Integer.parseInt(date)),
+                            listOf(
+                                EegForKwpRange(
+                                    BigDecimal(aboveThousand),
+                                    1001,
+                                    null
+                                )
+                            )
+                        ),
+                    )
                 )
 
                 internalFacadeEnclosureList.add(
-                        EegFacadeEnclosure(
-                                YearMonth.now(),
-                                BigDecimal(facadeEnclosure)
-                        )
+                    EegType.EegFacadeEnclosure(
+                        YearMonth.now(),
+                        BigDecimal(facadeEnclosure)
+                    )
                 )
 
                 if (openSpaceSystem.contains("kW:")) {
@@ -98,22 +114,22 @@ class EegTsvTill2008Reader() {
                     upperBound = upperBound.replace(" ", "")
 
                     internalOpenSpaceSystemEegList.add(
-                            OpenSpaceSystemEeg(
-                                    YearMonth.now(),
-                                    BigDecimal(openSpaceSystem.substringAfter("kW: ")),
-                                    Integer.parseInt(upperBound)
-                            )
+                        EegType.OpenSpaceSystemEeg(
+                            YearMonth.now(),
+                            BigDecimal(openSpaceSystem.substringAfter("kW: ")),
+                            Integer.parseInt(upperBound)
+                        )
                     )
                     line = fileReader.readLine()
                     continue
                 }
 
                 internalOpenSpaceSystemEegList.add(
-                        OpenSpaceSystemEeg(
-                                YearMonth.now(),
-                                BigDecimal(openSpaceSystem),
-                                null
-                        )
+                    EegType.OpenSpaceSystemEeg(
+                        YearMonth.now(),
+                        BigDecimal(openSpaceSystem),
+                        null
+                    )
                 )
                 line = fileReader.readLine()
             }

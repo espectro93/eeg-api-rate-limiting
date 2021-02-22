@@ -37,18 +37,21 @@ class EegTsv2009TillMarch2012Reader() {
 
     private val yearResolutionMap = mutableMapOf<Year, YearResolution>()
 
-    private val internalEegByYearList = mutableListOf<EegByYear>()
-    private val internalEegByYearMonthList = mutableListOf<EegByYearMonth>()
-    private val internalEegWithSelfConsumptionByYearList = mutableListOf<EegWithSelfConsumptionByYear>()
-    private val internalEegWithSelfConsumptionByYearMonthList = mutableListOf<EegWithSelfConsumptionByYearMonth>()
+    private val internalEegByYearList = mutableListOf<EegType.EegByYear>()
+    private val internalEegByYearMonthList = mutableListOf<EegType.EegByYearMonth>()
+    private val internalEegWithSelfConsumptionByYearList = mutableListOf<EegType.EegWithSelfConsumptionByYear>()
+    private val internalEegWithSelfConsumptionByYearMonthList =
+        mutableListOf<EegType.EegWithSelfConsumptionByYearMonth>()
+    private val internalSystemOnSealedOrConversionAreaList = mutableListOf<EegType.SystemOnSealedOrConversionAreaEeg>()
+    private val internalSystemOnAcreList = mutableListOf<Eeg.SystemOnAcreEeg>()
 
-    private val internalOpenSpaceSystemEegList = mutableListOf<OpenSpaceSystemEeg>()
-    private val internalFacadeEnclosureList = mutableListOf<EegFacadeEnclosure>()
+    private val internalOpenSpaceSystemEegList = mutableListOf<EegType.OpenSpaceSystemEeg>()
+    private val internalFacadeEnclosureList = mutableListOf<EegType.EegFacadeEnclosure>()
 
-    val eegByYearList: List<EegByYear> = internalEegByYearList
-    val eegByYearMonthList: List<EegByYearMonth> = internalEegByYearMonthList
-    val openSpaceSystemEegList: List<OpenSpaceSystemEeg> = internalOpenSpaceSystemEegList
-    val facadeEnclosureList: List<EegFacadeEnclosure> = internalFacadeEnclosureList
+    val eegByYearList: List<EegType.EegByYear> = internalEegByYearList
+    val eegByYearMonthList: List<EegType.EegByYearMonth> = internalEegByYearMonthList
+    val openSpaceSystemEegList: List<EegType.OpenSpaceSystemEeg> = internalOpenSpaceSystemEegList
+    val facadeEnclosureList: List<EegType.EegFacadeEnclosure> = internalFacadeEnclosureList
 
     //TODO:ALLE EEG TYPES AU?ERHALB DER RANGES MIT ENUM WERTEN GENERALISIEREN
 
@@ -112,9 +115,9 @@ class EegTsv2009TillMarch2012Reader() {
 
                 yearResolutionMap[parsedYear]?.let {
                     if (it == YearResolution.MONTHLY) {
-                        var eegDate: YearMonth = YearMonth.from(LocalDate.parse(date))
+                        val eegDate: YearMonth = YearMonth.from(LocalDate.parse(date))
                         internalEegByYearMonthList.add(
-                            EegByYearMonth(
+                            EegType.EegByYearMonth(
                                 eegDate,
                                 listOf(
                                     EegForKwpRange(
@@ -143,7 +146,7 @@ class EegTsv2009TillMarch2012Reader() {
 
                         internalEegWithSelfConsumptionByYearMonthList.addAll(
                             listOf(
-                                EegWithSelfConsumptionByYearMonth(
+                                EegType.EegWithSelfConsumptionByYearMonth(
                                     eegDate,
                                     listOf(
                                         EegForKwpRange(
@@ -164,7 +167,7 @@ class EegTsv2009TillMarch2012Reader() {
                                     ),
                                     false
                                 ),
-                                EegWithSelfConsumptionByYearMonth(
+                                EegType.EegWithSelfConsumptionByYearMonth(
                                     eegDate,
                                     listOf(
                                         EegForKwpRange(
@@ -188,32 +191,22 @@ class EegTsv2009TillMarch2012Reader() {
                             )
                         )
                     }
-                }
-
-
-                if (openSpaceSystem.contains("kW:")) {
-                    var upperBound = openSpaceSystem.substringBefore("kW:")
-                    upperBound = upperBound.replace("< ", "")
-                    upperBound = upperBound.replace(" ", "")
-
                     internalOpenSpaceSystemEegList.add(
-                        OpenSpaceSystemEeg(
-                            YearMonth.now(),
-                            BigDecimal(openSpaceSystem.substringAfter("kW: ")),
-                            Integer.parseInt(upperBound)
+                        EegType.OpenSpaceSystemEeg(
+                            YearMonth.from(LocalDate.parse(date)),
+                            BigDecimal(openSpaceSystem),
+                            null
                         )
                     )
-                    line = fileReader.readLine()
-                    continue
+
+                    internalSystemOnSealedOrConversionAreaList.add(
+                        EegType.SystemOnSealedOrConversionAreaEeg(
+                            YearMonth.from(LocalDate.parse(date)),
+                            BigDecimal(systemOnSealedOrConversionArea)
+                        )
+                    )
                 }
 
-                internalOpenSpaceSystemEegList.add(
-                    OpenSpaceSystemEeg(
-                        YearMonth.now(),
-                        BigDecimal(openSpaceSystem),
-                        null
-                    )
-                )
                 line = fileReader.readLine()
             }
         } catch (e: Exception) {
