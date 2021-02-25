@@ -6,10 +6,15 @@ import java.time.YearMonth
 sealed class EegType {
     data class EegByYearMonth(val date: YearMonth, val rangeValues: List<EegForKwpRange>) : EegType()
     data class OpenSpaceSystemEeg(val date: YearMonth, val value: BigDecimal, val upperKwpBound: Int?) : EegType()
-    data class EegFacadeEnclosure(val date: YearMonth,val value: BigDecimal) : EegType()
-    data class SystemOnSealedOrConversionAreaEeg(val date: YearMonth, val value: BigDecimal): EegType()
+    data class EegFacadeEnclosure(val date: YearMonth, val value: BigDecimal) : EegType()
+    data class SystemOnSealedOrConversionAreaEeg(val date: YearMonth, val value: BigDecimal) : EegType()
     data class SystemOnAcreEeg(val date: YearMonth, val value: BigDecimal)
-    data class EegWithSelfConsumptionByYearMonth(val date: YearMonth, val rangeValues: List<EegForKwpRange>, val aboveThreshold: Boolean): EegType()
+    data class NotResidentialBuildingExteriorEeg(val date: YearMonth, val value: BigDecimal) : EegType()
+    data class EegWithSelfConsumptionByYearMonth(
+        val date: YearMonth,
+        val rangeValues: List<EegForKwpRange>,
+        val aboveThreshold: Boolean
+    ) : EegType()
 }
 
 data class EegForKwpRange(
@@ -18,4 +23,4 @@ data class EegForKwpRange(
     val upperKwpBound: Int?
 )
 
-interface Eeg{}
+interface Eeg {}

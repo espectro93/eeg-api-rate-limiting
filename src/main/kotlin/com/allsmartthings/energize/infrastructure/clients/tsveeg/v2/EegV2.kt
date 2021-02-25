@@ -11,8 +11,7 @@ data class EegV2Internal(
     val internalEegWithSelfConsumptionByYearMonthList: MutableList<EegType.EegWithSelfConsumptionByYearMonth> = mutableListOf(),
     val internalSystemOnSealedOrConversionAreaList: MutableList<EegType.SystemOnSealedOrConversionAreaEeg> = mutableListOf(),
     val internalSystemOnAcreList: MutableList<EegType.SystemOnAcreEeg> = mutableListOf(),
-    val internalOpenSpaceSystemEegList: MutableList<EegType.OpenSpaceSystemEeg> = mutableListOf(),
-    val internalFacadeEnclosureList: MutableList<EegType.EegFacadeEnclosure> = mutableListOf()
+    val internalOpenSpaceSystemEegList: MutableList<EegType.OpenSpaceSystemEeg> = mutableListOf()
 )
 
 data class EegV2(
@@ -21,8 +20,7 @@ data class EegV2(
     val eegWithSelfConsumptionByYearMonthList: List<EegType.EegWithSelfConsumptionByYearMonth>,
     val eegSystemOnSealedOrConversionAreaEegList: List<EegType.SystemOnSealedOrConversionAreaEeg>,
     val eegSystemOnAcreList: List<EegType.SystemOnAcreEeg>,
-    val openSpaceSystemEegList: List<EegType.OpenSpaceSystemEeg>,
-    val facadeEnclosureList: List<EegType.EegFacadeEnclosure>
+    val openSpaceSystemEegList: List<EegType.OpenSpaceSystemEeg>
 ): Eeg {
     companion object {
         fun fromInternalData(data: EegV2Internal): EegV2 {
@@ -32,8 +30,7 @@ data class EegV2(
                 data.internalEegWithSelfConsumptionByYearMonthList,
                 data.internalSystemOnSealedOrConversionAreaList,
                 data.internalSystemOnAcreList,
-                data.internalOpenSpaceSystemEegList,
-                data.internalFacadeEnclosureList
+                data.internalOpenSpaceSystemEegList
             )
         }
     }

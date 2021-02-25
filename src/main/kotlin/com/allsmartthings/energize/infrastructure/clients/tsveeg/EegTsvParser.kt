@@ -5,10 +5,14 @@ import java.time.LocalDate
 import java.time.Year
 import java.time.YearMonth
 import java.time.format.DateTimeParseException
+import java.time.format.DateTimeFormatter
+
+
+
 
 interface EegTsvParser<T : Eeg> {
     fun getYearResolutionMap(): MutableMap<Year, YearResolution>
-    fun getEeg(): T
+    fun readFromTsv(): T
 }
 
 fun <T: Eeg> EegTsvParser<T>.parseInputDate(date: String): YearMonth {
@@ -17,7 +21,8 @@ fun <T: Eeg> EegTsvParser<T>.parseInputDate(date: String): YearMonth {
         getYearResolutionMap().putIfAbsent(parsedYear, YearResolution.YEARLY)
         return YearMonth.of(parsedYear.value, 1)
     }
-    val parsedYearMonth = YearMonth.from(LocalDate.parse(date))
+    val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+    val parsedYearMonth = YearMonth.from(LocalDate.parse(date, formatter))
     val parsedYear = Year.of(parsedYearMonth.year)
     getYearResolutionMap().putIfAbsent(parsedYear, YearResolution.MONTHLY)
     return parsedYearMonth

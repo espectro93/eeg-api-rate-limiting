@@ -90,3 +90,99 @@ data class EegV2Vars(
         }
     }
 }
+
+object EegV3Constants {
+    const val YEAR_MONTH = 0
+    const val BELOW_TEN_KWP = 1
+    const val ABOVE_TEN_BELOW_FORTY_KWP = 2
+    const val ABOVE_FORTY_BELOW_THOUSAND_KWP = 3
+    const val ABOVE_THOUSAND_BELOW_TEN_THOUSAND_KWP = 4
+    const val NOT_RESIDENTIAL_BUILDING_EXTERIOR = 5
+    const val SYSTEM_ON_SEALED_OR_CONVERSION_AREA = 6
+}
+
+data class EegV3Vars(
+    val date: String,
+    val belowTenKwp: String,
+    val aboveTenBelowFortyKwp:String,
+    val aboveFortyBelowThousandKwp:String,
+    val aboveThousandBelowTenThousandKwp: String,
+    val notResidentialBuildingExterior: String,
+    val systemOnSealedOrConversionArea: String
+) {
+    companion object {
+        fun parseFromRawInput(rawInput: String): EegV3Vars {
+            val tokens = rawInput.split("\t");
+            return EegV3Vars(
+                tokens[EegV3Constants.YEAR_MONTH],
+                tokens[EegV3Constants.BELOW_TEN_KWP],
+                tokens[EegV3Constants.ABOVE_TEN_BELOW_FORTY_KWP],
+                tokens[EegV3Constants.ABOVE_FORTY_BELOW_THOUSAND_KWP],
+                tokens[EegV3Constants.ABOVE_THOUSAND_BELOW_TEN_THOUSAND_KWP],
+                tokens[EegV3Constants.NOT_RESIDENTIAL_BUILDING_EXTERIOR],
+                tokens[EegV3Constants.SYSTEM_ON_SEALED_OR_CONVERSION_AREA]
+            )
+        }
+    }
+}
+
+object EegV4Constants {
+    const val YEAR_MONTH = 0
+    const val BELOW_TEN_KWP = 1
+    const val ABOVE_TEN_BELOW_FORTY_KWP = 2
+    const val ABOVE_FORTY_BELOW_FIVE_HUNDRED_KWP = 3
+    const val NOT_RESIDENTIAL_BUILDING_EXTERIOR = 4
+    const val SYSTEM_ON_SEALED_OR_CONVERSION_AREA = 5
+}
+
+data class EegV4Vars(
+    val date: String,
+    val belowTenKwp: String,
+    val aboveTenBelowFortyKwp:String,
+    val aboveFortyBelowFiveHundredKwp:String,
+    val notResidentialBuildingExterior: String,
+    val systemOnSealedOrConversionArea: String
+) {
+    companion object {
+        fun parseFromRawInput(rawInput: String): EegV4Vars {
+            val tokens = rawInput.split("\t");
+            return EegV4Vars(
+                tokens[EegV4Constants.YEAR_MONTH],
+                tokens[EegV4Constants.BELOW_TEN_KWP],
+                tokens[EegV4Constants.ABOVE_TEN_BELOW_FORTY_KWP],
+                tokens[EegV4Constants.ABOVE_FORTY_BELOW_FIVE_HUNDRED_KWP],
+                tokens[EegV4Constants.NOT_RESIDENTIAL_BUILDING_EXTERIOR],
+                tokens[EegV4Constants.SYSTEM_ON_SEALED_OR_CONVERSION_AREA]
+            )
+        }
+    }
+}
+
+object EegV5Constants {
+    const val YEAR_MONTH = 0
+    const val BELOW_TEN_KWP = 1
+    const val ABOVE_TEN_BELOW_FORTY_KWP = 2
+    const val ABOVE_FORTY_BELOW_HUNDRED_KWP = 3
+    const val NOT_RESIDENTIAL_BUILDING_EXTERIOR = 4
+}
+
+data class EegV5Vars(
+    val date: String,
+    val belowTenKwp: String,
+    val aboveTenBelowFortyKwp:String,
+    val aboveFortyBelowFiveHundredKwp:String,
+    val notResidentialBuildingExterior: String,
+) {
+    companion object {
+        fun parseFromRawInput(rawInput: String): EegV5Vars {
+            val tokens = rawInput.split("\t");
+            return EegV5Vars(
+                tokens[EegV5Constants.YEAR_MONTH],
+                tokens[EegV5Constants.BELOW_TEN_KWP],
+                tokens[EegV5Constants.ABOVE_TEN_BELOW_FORTY_KWP],
+                tokens[EegV5Constants.ABOVE_FORTY_BELOW_HUNDRED_KWP],
+                tokens[EegV5Constants.NOT_RESIDENTIAL_BUILDING_EXTERIOR]
+            )
+        }
+    }
+}

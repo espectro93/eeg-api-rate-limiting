@@ -9,8 +9,9 @@ internal class EegV1ReaderTest{
 
     @Test
     fun readEegTill2008(){
-        assertEquals(eegTsvReader.eegByYearList.size, 36)
-        assertEquals(eegTsvReader.facadeEnclosureList.size, 9)
-        assertEquals(eegTsvReader.openSpaceSystemEegList.size, 9)
+        val eeg: EegV1 = eegTsvReader.readFromTsv()
+        assertEquals(eeg.eegByYearList.size, 36)
+        assertEquals(eeg.facadeEnclosureList.size, 9)
+        assertEquals(eeg.openSpaceSystemEegList.size, 9)
     }
 }

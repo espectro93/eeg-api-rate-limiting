@@ -14,16 +14,12 @@ import java.time.YearMonth
 class EegV1Reader() : EegTsvParser<EegV1> {
     private val internalEegData: EegV1Internal = EegV1Internal()
 
-    init {
-        readFromTsv()
-    }
-
-    private fun readFromTsv() {
+    override fun readFromTsv(): EegV1 {
         var fileReader: BufferedReader? = null
 
         try {
             var line: String?
-            fileReader = BufferedReader(FileReader("src/main/resources/data/eeg_bis_2008.tsv"))
+            fileReader = BufferedReader(FileReader("src/main/resources/data/eeg_v1.tsv"))
             fileReader.readLine()
             line = fileReader.readLine()
 
@@ -76,6 +72,7 @@ class EegV1Reader() : EegTsvParser<EegV1> {
                 e.printStackTrace()
             }
         }
+        return EegV1.fromInternalData(internalEegData)
     }
 
     private fun populateEegByYearMonthList(eegDate: YearMonth, eegVars: EegV1Vars): List<EegType.EegByYearMonth> {
@@ -125,9 +122,5 @@ class EegV1Reader() : EegTsvParser<EegV1> {
 
     override fun getYearResolutionMap(): MutableMap<Year, YearResolution> {
         return internalEegData.internalYearResolutionMap
-    }
-
-    override fun getEeg(): EegV1 {
-        return EegV1.fromInternalData(internalEegData)
     }
 }
