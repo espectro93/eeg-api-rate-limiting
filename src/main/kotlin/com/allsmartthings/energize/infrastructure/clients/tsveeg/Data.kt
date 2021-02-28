@@ -1,6 +1,8 @@
 package com.allsmartthings.energize.infrastructure.clients.tsveeg
 
+import com.allsmartthings.energize.domain.Eeg
 import java.math.BigDecimal
+import java.time.Year
 import java.time.YearMonth
 
 sealed class EegType {
@@ -11,16 +13,43 @@ sealed class EegType {
     data class SystemOnAcreEeg(val date: YearMonth, val value: BigDecimal)
     data class NotResidentialBuildingExteriorEeg(val date: YearMonth, val value: BigDecimal) : EegType()
     data class EegWithSelfConsumptionByYearMonth(
-        val date: YearMonth,
-        val rangeValues: List<EegForKwpRange>,
-        val aboveThreshold: Boolean
+            val date: YearMonth,
+            val rangeValues: List<EegForKwpRange>,
+            val aboveThreshold: Boolean
     ) : EegType()
 }
 
 data class EegForKwpRange(
-    val value: BigDecimal,
-    val lowerKwpBound: Int,
-    val upperKwpBound: Int?
+        val value: BigDecimal,
+        val lowerKwpBound: Int,
+        val upperKwpBound: Int?
 )
 
-interface EegMarker {}
+interface EegMarker {
+    val yearResolutionMap: Map<Year, YearResolution>
+    val eegByYearMonthList: List<EegType.EegByYearMonth>
+}
+
+
+fun EegMarker.getEegListFor(kwp: BigDecimal, date: YearMonth): Eeg {
+    val dateFromResolution = resolveDateWithResolutionMap(date)
+
+    return eegByYearMonthList.stream()
+            .filter { eegByYearMonth -> eegByYearMonth.date == dateFromResolution }
+            .map { eegByYearMonth ->
+                eegByYearMonth.rangeValues
+                        .filter { eegForKwpRange ->
+                            eegForKwpRange.lowerKwpBound <= kwp.toInt() && (
+                                    eegForKwpRange.upperKwpBound?.let { it >= kwp.toInt() } ?: true)
+                        }.map { eegForKwpRange -> Eeg(dateFromResolution.toString(), eegForKwpRange.value) }
+            }.findFirst()
+            .orElseThrow()
+            .stream()
+            .findFirst()
+            .orElseThrow()
+}
+
+private fun EegMarker.resolveDateWithResolutionMap(date: YearMonth): YearMonth {
+    val resolution = yearResolutionMap[Year.of(date.year)]
+    return if (resolution == YearResolution.YEARLY) YearMonth.of(date.year, 1) else date;
+}

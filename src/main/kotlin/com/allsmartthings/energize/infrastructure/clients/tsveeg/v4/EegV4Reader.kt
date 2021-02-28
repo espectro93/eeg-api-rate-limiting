@@ -1,6 +1,6 @@
 package com.allsmartthings.energize.infrastructure.clients.tsveeg.v4
 
-import com.allsmartthings.energize.YearResolution
+import com.allsmartthings.energize.infrastructure.clients.tsveeg.YearResolution
 import com.allsmartthings.energize.infrastructure.clients.tsveeg.*
 import org.springframework.stereotype.Service
 import java.io.BufferedReader
@@ -23,7 +23,7 @@ class EegV4Reader : EegTsvParser<EegV4> {
 
         try {
             var line: String?
-            fileReader = BufferedReader(FileReader("src/main/resources/data/eeg_V4.tsv"))
+            fileReader = BufferedReader(FileReader("src/main/resources/data/eeg_v4.tsv"))
             fileReader.readLine()
             line = fileReader.readLine()
 

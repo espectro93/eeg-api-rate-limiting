@@ -1,6 +1,6 @@
 package com.allsmartthings.energize.infrastructure.clients.tsveeg.v1
 
-import com.allsmartthings.energize.YearResolution
+import com.allsmartthings.energize.infrastructure.clients.tsveeg.YearResolution
 import com.allsmartthings.energize.infrastructure.clients.tsveeg.*
 import org.springframework.stereotype.Service
 import java.io.BufferedReader

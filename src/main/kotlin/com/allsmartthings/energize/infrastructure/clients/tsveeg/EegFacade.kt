@@ -1,7 +1,6 @@
 package com.allsmartthings.energize.infrastructure.clients.tsveeg
 
 import com.allsmartthings.energize.domain.Eeg
-import com.allsmartthings.energize.domain.EegValue
 import com.allsmartthings.energize.domain.EegService
 import com.allsmartthings.energize.infrastructure.clients.tsveeg.v1.EegV1
 import com.allsmartthings.energize.infrastructure.clients.tsveeg.v1.EegV1Reader
@@ -13,7 +12,6 @@ import com.allsmartthings.energize.infrastructure.clients.tsveeg.v4.EegV4
 import com.allsmartthings.energize.infrastructure.clients.tsveeg.v4.EegV4Reader
 import com.allsmartthings.energize.infrastructure.clients.tsveeg.v5.EegV5
 import com.allsmartthings.energize.infrastructure.clients.tsveeg.v5.EegV5Reader
-import org.springframework.context.support.beans
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.time.YearMonth
@@ -30,15 +28,16 @@ class EegFacade(
     private val eegV4: EegV4 = eegV4Reader.readFromTsv()
     private val eegV5: EegV5 = eegV5Reader.readFromTsv()
 
-    //TODO: CIRCUIT BREAKER J4F & SELENIUM CRAWLER FOR EPEX SPOT
-
     override fun getEegByYearMonthAndKwp(yearMonth: YearMonth, kwp: BigDecimal): Eeg {
-        TODO("Not yet implemented")
+        val partialEegList: EegMarker = determineEegType(yearMonth)
+        return partialEegList.getEegListFor(kwp, yearMonth)
     }
 
     private fun determineEegType(yearMonth: YearMonth): EegMarker {
-        if (yearMonth.isBefore(YearMonth.of(2009, 1))) return eegV1;
-        else if (yearMonth.isAfter(YearMonth.of(2008, 12)) && yearMonth.isBefore(YearMonth.of(2012, 4))) return eegV2;
-        else return eegV3
+        return if (yearMonth.isBefore(YearMonth.of(2009, 1))) eegV1;
+        else if (yearMonth.isAfter(YearMonth.of(2008, 12)) && yearMonth.isBefore(YearMonth.of(2012, 4))) eegV2;
+        else if(yearMonth.isAfter(YearMonth.of(2012, 3)) && yearMonth.isBefore(YearMonth.of(2014, 8))) eegV3;
+        else if(yearMonth.isAfter(YearMonth.of(2014, 7)) && yearMonth.isBefore(YearMonth.of(2017, 1))) eegV4;
+        else eegV5
     }
 }
