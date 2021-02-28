@@ -1,7 +1,7 @@
 package com.allsmartthings.energize.infrastructure.clients.tsveeg.v2
 
 import com.allsmartthings.energize.YearResolution
-import com.allsmartthings.energize.infrastructure.clients.tsveeg.Eeg
+import com.allsmartthings.energize.infrastructure.clients.tsveeg.EegMarker
 import com.allsmartthings.energize.infrastructure.clients.tsveeg.EegType
 import java.time.Year
 
@@ -21,7 +21,7 @@ data class EegV2(
     val eegSystemOnSealedOrConversionAreaEegList: List<EegType.SystemOnSealedOrConversionAreaEeg>,
     val eegSystemOnAcreList: List<EegType.SystemOnAcreEeg>,
     val openSpaceSystemEegList: List<EegType.OpenSpaceSystemEeg>
-): Eeg {
+): EegMarker {
     companion object {
         fun fromInternalData(data: EegV2Internal): EegV2 {
             return EegV2(

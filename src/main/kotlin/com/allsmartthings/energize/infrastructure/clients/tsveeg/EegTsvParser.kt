@@ -10,12 +10,12 @@ import java.time.format.DateTimeFormatter
 
 
 
-interface EegTsvParser<T : Eeg> {
+interface EegTsvParser<T : EegMarker> {
     fun getYearResolutionMap(): MutableMap<Year, YearResolution>
     fun readFromTsv(): T
 }
 
-fun <T: Eeg> EegTsvParser<T>.parseInputDate(date: String): YearMonth {
+fun <T: EegMarker> EegTsvParser<T>.parseInputDate(date: String): YearMonth {
     if (isYear(date)) {
         val parsedYear = Year.parse(date)
         getYearResolutionMap().putIfAbsent(parsedYear, YearResolution.YEARLY)

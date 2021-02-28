@@ -23,4 +23,4 @@ data class EegForKwpRange(
     val upperKwpBound: Int?
 )
 
-interface Eeg {}
+interface EegMarker {}
