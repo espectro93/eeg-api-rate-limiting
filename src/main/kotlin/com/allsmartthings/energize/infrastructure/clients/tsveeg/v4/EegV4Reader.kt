@@ -1,6 +1,5 @@
 package com.allsmartthings.energize.infrastructure.clients.tsveeg.v4
 
-import com.allsmartthings.energize.infrastructure.clients.tsveeg.YearResolution
 import com.allsmartthings.energize.infrastructure.clients.tsveeg.*
 import org.springframework.stereotype.Service
 import java.io.BufferedReader
@@ -32,24 +31,24 @@ class EegV4Reader : EegTsvParser<EegV4> {
                 val eegDate = parseInputDate(eegVars.date)
 
                 internalEegData.internalEegByYearMonthList.add(
-                    populateEegByYearMonthList(
-                        eegDate,
-                        eegVars
-                    )
+                        populateEegByYearMonthList(
+                                eegDate,
+                                eegVars
+                        )
                 )
 
                 internalEegData.internalNotResidentialBuildingExteriorEegList.add(
-                    EegType.NotResidentialBuildingExteriorEeg(
-                        eegDate,
-                        BigDecimal(eegVars.notResidentialBuildingExterior)
-                    )
+                        EegType.NotResidentialBuildingExteriorEeg(
+                                eegDate,
+                                BigDecimal(eegVars.notResidentialBuildingExterior)
+                        )
                 )
 
                 internalEegData.internalSystemOnSealedOrConversionAreaList.add(
-                    EegType.SystemOnSealedOrConversionAreaEeg(
-                        eegDate,
-                        BigDecimal(eegVars.systemOnSealedOrConversionArea)
-                    )
+                        EegType.SystemOnSealedOrConversionAreaEeg(
+                                eegDate,
+                                BigDecimal(eegVars.systemOnSealedOrConversionArea)
+                        )
                 )
 
                 line = fileReader.readLine()
@@ -69,28 +68,28 @@ class EegV4Reader : EegTsvParser<EegV4> {
     }
 
     private fun populateEegByYearMonthList(
-        eegDate: YearMonth,
-        eegVars: EegV4Vars
+            eegDate: YearMonth,
+            eegVars: EegV4Vars
     ): EegType.EegByYearMonth {
         return EegType.EegByYearMonth(
-            eegDate,
-            listOf(
-                EegForKwpRange(
-                    BigDecimal(eegVars.belowTenKwp),
-                    0,
-                    10
-                ),
-                EegForKwpRange(
-                    BigDecimal(eegVars.aboveTenBelowFortyKwp),
-                    11,
-                    40
-                ),
-                EegForKwpRange(
-                    BigDecimal(eegVars.aboveFortyBelowFiveHundredKwp),
-                    41,
-                    1000
+                eegDate,
+                listOf(
+                        EegForKwpRange(
+                                BigDecimal(eegVars.belowTenKwp),
+                                0,
+                                10
+                        ),
+                        EegForKwpRange(
+                                BigDecimal(eegVars.aboveTenBelowFortyKwp),
+                                11,
+                                40
+                        ),
+                        EegForKwpRange(
+                                BigDecimal(eegVars.aboveFortyBelowFiveHundredKwp),
+                                41,
+                                1000
+                        )
                 )
-            )
         )
     }
 }

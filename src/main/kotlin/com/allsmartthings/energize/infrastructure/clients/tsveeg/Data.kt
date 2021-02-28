@@ -41,7 +41,7 @@ fun EegMarker.getEegListFor(kwp: BigDecimal, date: YearMonth): Eeg {
                         .filter { eegForKwpRange ->
                             eegForKwpRange.lowerKwpBound <= kwp.toInt() && (
                                     eegForKwpRange.upperKwpBound?.let { it >= kwp.toInt() } ?: true)
-                        }.map { eegForKwpRange -> Eeg(dateFromResolution.toString(), eegForKwpRange.value) }
+                        }.map { eegForKwpRange -> Eeg(date.toString(), eegForKwpRange.value) }
             }.findFirst()
             .orElseThrow()
             .stream()

@@ -18,8 +18,8 @@ import java.time.YearMonth
 
 @Service
 class EegFacade(
-    eegV1Reader: EegV1Reader, eegV2Reader: EegV2Reader,
-    eegV3Reader: EegV3Reader, eegV4Reader: EegV4Reader, eegV5Reader: EegV5Reader
+        eegV1Reader: EegV1Reader, eegV2Reader: EegV2Reader,
+        eegV3Reader: EegV3Reader, eegV4Reader: EegV4Reader, eegV5Reader: EegV5Reader
 ) : EegService {
 
     private val eegV1: EegV1 = eegV1Reader.readFromTsv()
@@ -36,8 +36,8 @@ class EegFacade(
     private fun determineEegType(yearMonth: YearMonth): EegMarker {
         return if (yearMonth.isBefore(YearMonth.of(2009, 1))) eegV1;
         else if (yearMonth.isAfter(YearMonth.of(2008, 12)) && yearMonth.isBefore(YearMonth.of(2012, 4))) eegV2;
-        else if(yearMonth.isAfter(YearMonth.of(2012, 3)) && yearMonth.isBefore(YearMonth.of(2014, 8))) eegV3;
-        else if(yearMonth.isAfter(YearMonth.of(2014, 7)) && yearMonth.isBefore(YearMonth.of(2017, 1))) eegV4;
+        else if (yearMonth.isAfter(YearMonth.of(2012, 3)) && yearMonth.isBefore(YearMonth.of(2014, 8))) eegV3;
+        else if (yearMonth.isAfter(YearMonth.of(2014, 7)) && yearMonth.isBefore(YearMonth.of(2017, 1))) eegV4;
         else eegV5
     }
 }

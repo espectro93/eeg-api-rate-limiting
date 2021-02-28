@@ -3,15 +3,15 @@ package com.allsmartthings.energize.infrastructure.clients.tsveeg
 import java.time.LocalDate
 import java.time.Year
 import java.time.YearMonth
-import java.time.format.DateTimeParseException
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 interface EegTsvParser<T : EegMarker> {
     fun getYearResolutionMap(): MutableMap<Year, YearResolution>
     fun readFromTsv(): T
 }
 
-fun <T: EegMarker> EegTsvParser<T>.parseInputDate(date: String): YearMonth {
+fun <T : EegMarker> EegTsvParser<T>.parseInputDate(date: String): YearMonth {
     if (isYear(date)) {
         val parsedYear = Year.parse(date)
         getYearResolutionMap().putIfAbsent(parsedYear, YearResolution.YEARLY)

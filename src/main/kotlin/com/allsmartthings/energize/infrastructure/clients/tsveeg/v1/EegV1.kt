@@ -1,12 +1,9 @@
 package com.allsmartthings.energize.infrastructure.clients.tsveeg.v1
 
-import com.allsmartthings.energize.domain.Eeg
 import com.allsmartthings.energize.infrastructure.clients.tsveeg.EegMarker
 import com.allsmartthings.energize.infrastructure.clients.tsveeg.EegType
 import com.allsmartthings.energize.infrastructure.clients.tsveeg.YearResolution
-import java.math.BigDecimal
 import java.time.Year
-import java.time.YearMonth
 
 data class EegV1Internal(
         val internalYearResolutionMap: MutableMap<Year, YearResolution> = mutableMapOf(),
