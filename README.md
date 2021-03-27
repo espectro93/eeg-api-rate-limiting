@@ -1,4 +1,4 @@
-# Allthingssmart Energize
+# EEG Api Rate Limiting
 
 This is a small example project that utilizes german EEG data until 2021 for various kwp ranges. Access is regulated through different Plans for api usage.
 
